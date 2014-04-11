@@ -12,6 +12,8 @@ using namespace std;
 //Tiles
 #define TILE_FLOOR 0
 #define TILE_WALL 1
+#define TILE_CLOSEDDOOR 2
+#define TILE_OPENDOOR 3
 
 int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -21,7 +23,7 @@ int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-    { 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0 },
+    { 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -31,18 +33,55 @@ int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
+void DrawMap(void)
+{
+    for (int y = 0; y < MAP_HEIGHT; y++)
+    {
+        //move(0,y);
+        for(int x = 0; x < MAP_WIDTH; x++)
+        {
+            switch (firstMapArray[y][x])
+            {
+            case TILE_FLOOR:
+                mvaddch(y,x,'.');
+                break;
+            case TILE_WALL:
+                mvaddch(y,x,'#');
+                break;
+            case TILE_CLOSEDDOOR:
+                mvaddch(y,x,'+');
+                break;
+            case TILE_OPENDOOR:
+                mvaddch(y,x,'/');
+                break;
+            }
+        }
+    }
+}
+
+int OpenDoor(int fMapX, int fMapY)
+{
+    firstMapArray[fMapY][fMapX] = TILE_OPENDOOR;
+    DrawMap();
+    return 0;
+}
+
 bool IsPassable(int fMapX, int fMapY)
 {
     if(fMapX < 0 || fMapX >= MAP_WIDTH || fMapY < 0 || fMapY >= MAP_HEIGHT){
         return false;
     }
     int fTile = firstMapArray[fMapY][fMapX];
-    if(fTile == TILE_FLOOR) {
+    //So if the tile looked at is a floor tile it returns true, else false.
+    if(fTile == TILE_FLOOR || fTile == TILE_OPENDOOR) {
         return true;
+    }
+    if(fTile == TILE_CLOSEDDOOR) {
+        OpenDoor(fMapX, fMapY);
+        return false;
     }
     return false;
 }
-
 
 
 //function prototypes
@@ -51,6 +90,7 @@ void DrawMap(void);
 int main()
 {
     keypad(initscr(),1);
+    start_color();
     int x = 1;
     int y = 1;
     //int yy;
@@ -92,22 +132,4 @@ int main()
     return 0;
 }
 
-void DrawMap(void)
-{
-    for (int y = 0; y < MAP_HEIGHT; y++)
-    {
-        //move(0,y);
-        for(int x = 0; x < MAP_WIDTH; x++)
-        {
-            switch (firstMapArray[y][x])
-            {
-            case TILE_FLOOR:
-                mvaddch(y,x,'.');
-                break;
-            case TILE_WALL:
-                mvaddch(y,x,'#');
-                break;
-            }
-        }
-    }
-}
+
