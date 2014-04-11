@@ -13,7 +13,6 @@ using namespace std;
 #define TILE_FLOOR 0
 #define TILE_WALL 1
 
-
 int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -31,6 +30,20 @@ int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
+
+bool IsPassable(int fMapX, int fMapY)
+{
+    if(fMapX < 0 || fMapX >= MAP_WIDTH || fMapY < 0 || fMapY >= MAP_HEIGHT){
+        return false;
+    }
+    int fTile = firstMapArray[fMapY][fMapX];
+    if(fTile == TILE_FLOOR) {
+        return true;
+    }
+    return false;
+}
+
+
 
 //function prototypes
 void DrawMap(void);
@@ -54,22 +67,23 @@ int main()
         //    }
         DrawMap();
 
-        if (ch == KEY_DOWN && TILE_FLOOR==firstMapArray[y+1][x])
+        if (ch == KEY_DOWN && IsPassable(x,y+1))
         {
             y++;
         }
-        if (ch == KEY_UP && TILE_FLOOR==firstMapArray[y-1][x]) //same as above. upper left is 0,0, y increases downwards
+        if (ch == KEY_UP && IsPassable(x,y-1)) //same as above. upper left is 0,0, y increases downwards
         {
             y--;
         }
-        if (ch == KEY_LEFT && TILE_FLOOR==firstMapArray[y][x-1])
+        if (ch == KEY_LEFT && IsPassable(x-1,y))
         {
             x--;
         }
-        if (ch == KEY_RIGHT && TILE_FLOOR==firstMapArray[y][x+1])
+        if (ch == KEY_RIGHT && IsPassable(x+1,y))
         {
             x++;
         }
+
         mvaddch(y,x,'@'); //mvaddch takes a char, mvprintw takes a string and invokes printf
         //refresh(); //do I need this?
     }
