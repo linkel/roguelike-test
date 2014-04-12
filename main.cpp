@@ -33,6 +33,7 @@ int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
+
 void DrawMap(void)
 {
     for (int y = 0; y < MAP_HEIGHT; y++)
@@ -49,10 +50,14 @@ void DrawMap(void)
                 mvaddch(y,x,'#');
                 break;
             case TILE_CLOSEDDOOR:
+                attron(COLOR_PAIR(1));
                 mvaddch(y,x,'+');
+                attroff(COLOR_PAIR(1));
                 break;
             case TILE_OPENDOOR:
+                attron(COLOR_PAIR(1));
                 mvaddch(y,x,'/');
+                attroff(COLOR_PAIR(1));
                 break;
             }
         }
@@ -89,22 +94,21 @@ void DrawMap(void);
 
 int main()
 {
-    keypad(initscr(),1);
+    initscr();
+    keypad(stdscr,1);
     start_color();
+    //init_color(COLOR_YELLOW, 220, 210, 0); //Not sure if my commandline can change colors
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
     int x = 1;
     int y = 1;
     //int yy;
     //int xx;
     int ch; //Key input variable
     curs_set(0);
-    //keypad(stdscr, TRUE);
     noecho(); //Turns off echo, which is when input character shows on screen.
     while('q'!=(ch=getch())) //as long as the character input is not q the program goes on
     {
-        //for(yy=0;yy<11;yy++){
-        //    for(xx=0;xx<15;xx++){
-        //        mvaddch(yy,xx,map[yy][xx]);
-        //    }
         DrawMap();
 
         if (ch == KEY_DOWN && IsPassable(x,y+1))
@@ -124,7 +128,7 @@ int main()
             x++;
         }
 
-        mvaddch(y,x,'@'); //mvaddch takes a char, mvprintw takes a string and invokes printf
+        mvaddch(y,x,'@');
         //refresh(); //do I need this?
     }
     endwin();
