@@ -33,15 +33,38 @@ int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-
-void DrawMap(void)
+struct TILE_TYPE
 {
-    for (int y = 0; y < MAP_HEIGHT; y++)
-    {
-        //move(0,y);
-        for(int x = 0; x < MAP_WIDTH; x++)
-        {
-            switch (firstMapArray[y][x])
+    char nCharacter;
+    bool bPassable;
+    short nColorPair;
+};
+
+TILE_TYPE sTileIndex[] = {
+    {'.', TRUE, 5},    //TILE_FLOOR
+    {'#', FALSE, 5},   //TILE_WALL
+    {'+', FALSE, 1},   //TILE_CLOSEDDOOR
+    {'/', TRUE, 1},    //TILE_OPENDOOR
+};
+
+
+void ColorInit (void)
+{
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_BLUE, COLOR_BLACK);
+    init_pair(4, COLOR_RED, COLOR_BLACK);
+    init_pair(5, COLOR_WHITE, COLOR_BLACK);
+}
+
+void DrawTile(int x, int y)
+{
+    int nType = firstMapArray[y][x];
+    attron(COLOR_PAIR(sTileIndex[nType].nColorPair));
+    mvaddch(y,x,sTileIndex[nType].nCharacter);
+    attroff(COLOR_PAIR(sTileIndex[nType].nColorPair));
+    /*
+    switch (firstMapArray[y][x])
             {
             case TILE_FLOOR:
                 mvaddch(y,x,'.');
@@ -59,7 +82,18 @@ void DrawMap(void)
                 mvaddch(y,x,'/');
                 attroff(COLOR_PAIR(1));
                 break;
-            }
+    }
+    */
+}
+
+void DrawMap(void)
+{
+    for (int y = 0; y < MAP_HEIGHT; y++)
+    {
+        //move(0,y);
+        for(int x = 0; x < MAP_WIDTH; x++)
+        {
+            DrawTile(x,y);
         }
     }
 }
@@ -98,8 +132,7 @@ int main()
     keypad(stdscr,1);
     start_color();
     //init_color(COLOR_YELLOW, 220, 210, 0); //Not sure if my commandline can change colors
-    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    ColorInit();
     int x = 1;
     int y = 1;
     //int yy;
