@@ -9,21 +9,23 @@ using namespace std;
 #define MAP_WIDTH 20
 #define MAP_HEIGHT 15
 
-//Tiles
+/*
+//Tiles. I don't think I need this anymore after rewriting the tile type code.
 #define TILE_FLOOR 0
 #define TILE_WALL 1
 #define TILE_CLOSEDDOOR 2
 #define TILE_OPENDOOR 3
+*/
 
 int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 },
+    { 0, 0, 1, 2, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 },
+    { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+    { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-    { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-    { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-    { 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, 0, 0 },
+    { 0, 0, 1, 1, 2, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -41,10 +43,10 @@ struct TILE_TYPE
 };
 
 TILE_TYPE sTileIndex[] = {
-    {'.', TRUE, 5},    //TILE_FLOOR
-    {'#', FALSE, 5},   //TILE_WALL
-    {'+', FALSE, 1},   //TILE_CLOSEDDOOR
-    {'/', TRUE, 1},    //TILE_OPENDOOR
+    {'.', TRUE, 5},    //(0) TILE_FLOOR
+    {'#', FALSE, 5},   //(1) TILE_WALL
+    {'+', FALSE, 1},   //(2) TILE_CLOSEDDOOR
+    {'/', TRUE, 1},    //(3) TILE_OPENDOOR
 };
 
 
@@ -63,34 +65,12 @@ void DrawTile(int x, int y)
     attron(COLOR_PAIR(sTileIndex[nType].nColorPair));
     mvaddch(y,x,sTileIndex[nType].nCharacter);
     attroff(COLOR_PAIR(sTileIndex[nType].nColorPair));
-    /*
-    switch (firstMapArray[y][x])
-            {
-            case TILE_FLOOR:
-                mvaddch(y,x,'.');
-                break;
-            case TILE_WALL:
-                mvaddch(y,x,'#');
-                break;
-            case TILE_CLOSEDDOOR:
-                attron(COLOR_PAIR(1));
-                mvaddch(y,x,'+');
-                attroff(COLOR_PAIR(1));
-                break;
-            case TILE_OPENDOOR:
-                attron(COLOR_PAIR(1));
-                mvaddch(y,x,'/');
-                attroff(COLOR_PAIR(1));
-                break;
-    }
-    */
 }
 
 void DrawMap(void)
 {
     for (int y = 0; y < MAP_HEIGHT; y++)
     {
-        //move(0,y);
         for(int x = 0; x < MAP_WIDTH; x++)
         {
             DrawTile(x,y);
@@ -100,7 +80,7 @@ void DrawMap(void)
 
 int OpenDoor(int fMapX, int fMapY)
 {
-    firstMapArray[fMapY][fMapX] = TILE_OPENDOOR;
+    firstMapArray[fMapY][fMapX] = 3;
     DrawMap();
     return 0;
 }
@@ -111,20 +91,23 @@ bool IsPassable(int fMapX, int fMapY)
         return false;
     }
     int fTile = firstMapArray[fMapY][fMapX];
+
+    //If it is a closed door, runs opendoor function.
+    if(fTile == 2) {
+        OpenDoor(fMapX, fMapY);
+        return false;
+    }
+
+    return sTileIndex[fTile].bPassable;
+    /*
     //So if the tile looked at is a floor tile it returns true, else false.
     if(fTile == TILE_FLOOR || fTile == TILE_OPENDOOR) {
         return true;
     }
-    if(fTile == TILE_CLOSEDDOOR) {
-        OpenDoor(fMapX, fMapY);
-        return false;
     }
     return false;
+    */
 }
-
-
-//function prototypes
-void DrawMap(void);
 
 int main()
 {
@@ -135,8 +118,6 @@ int main()
     ColorInit();
     int x = 1;
     int y = 1;
-    //int yy;
-    //int xx;
     int ch; //Key input variable
     curs_set(0);
     noecho(); //Turns off echo, which is when input character shows on screen.
