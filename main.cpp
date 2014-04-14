@@ -18,9 +18,9 @@ using namespace std;
 */
 
 int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 1, 2, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },
+    { 0, 0, 1, 2, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 4, 4, 4 },
     { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
@@ -47,6 +47,7 @@ TILE_TYPE sTileIndex[] = {
     {'#', FALSE, 5},   //(1) TILE_WALL
     {'+', FALSE, 1},   //(2) TILE_CLOSEDDOOR
     {'/', TRUE, 1},    //(3) TILE_OPENDOOR
+    {'~', FALSE, 6},   //(4) TILE_WATER
 };
 
 
@@ -57,6 +58,7 @@ void ColorInit (void)
     init_pair(3, COLOR_BLUE, COLOR_BLACK);
     init_pair(4, COLOR_RED, COLOR_BLACK);
     init_pair(5, COLOR_WHITE, COLOR_BLACK);
+    init_pair(6, COLOR_BLUE, COLOR_BLUE);
 }
 
 void DrawTile(int x, int y)
