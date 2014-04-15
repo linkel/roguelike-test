@@ -111,6 +111,9 @@ bool IsPassable(int fMapX, int fMapY)
     */
 }
 
+int nChangeX;
+int nChangeY;
+
 int main()
 {
     initscr();
@@ -129,22 +132,30 @@ int main()
 
         if (ch == KEY_DOWN && IsPassable(x,y+1))
         {
-            y++;
+            nChangeX=0;
+            nChangeY=1;
+            //y++;
         }
         if (ch == KEY_UP && IsPassable(x,y-1)) //same as above. upper left is 0,0, y increases downwards
         {
-            y--;
+            nChangeX=0;
+            nChangeY=1;
+            //y--;
         }
         if (ch == KEY_LEFT && IsPassable(x-1,y))
         {
-            x--;
+            nChangeX=1;
+            nChangeY=0;
+            //x--;
         }
         if (ch == KEY_RIGHT && IsPassable(x+1,y))
         {
-            x++;
+            nChangeX=0;
+            nChangeY=1;
+            //x++;
         }
 
-        mvaddch(y,x,'@');
+        mvaddch(nChangeY,nChangeX,'@');
         //refresh(); //do I need this?
     }
     endwin();
