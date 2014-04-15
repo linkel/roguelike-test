@@ -111,9 +111,6 @@ bool IsPassable(int fMapX, int fMapY)
     */
 }
 
-int nChangeX;
-int nChangeY;
-
 int main()
 {
     initscr();
@@ -121,6 +118,7 @@ int main()
     start_color();
     //init_color(COLOR_YELLOW, 220, 210, 0); //Not sure if my commandline can change colors
     ColorInit();
+    //Location variables
     int x = 1;
     int y = 1;
     int ch; //Key input variable
@@ -132,30 +130,42 @@ int main()
 
         if (ch == KEY_DOWN && IsPassable(x,y+1))
         {
-            nChangeX=0;
-            nChangeY=1;
-            //y++;
+            y++;
         }
         if (ch == KEY_UP && IsPassable(x,y-1)) //same as above. upper left is 0,0, y increases downwards
         {
-            nChangeX=0;
-            nChangeY=1;
-            //y--;
+            y--;
         }
         if (ch == KEY_LEFT && IsPassable(x-1,y))
         {
-            nChangeX=1;
-            nChangeY=0;
-            //x--;
+            x--;
         }
         if (ch == KEY_RIGHT && IsPassable(x+1,y))
         {
-            nChangeX=0;
-            nChangeY=1;
-            //x++;
+            x++;
+        }
+        if (ch == KEY_A1 && IsPassable(x-1,y-1))
+        {
+            x--;
+            y--;
+        }
+        if (ch == KEY_A3 && IsPassable(x+1,y-1))
+        {
+            x++;
+            y--;
+        }
+        if (ch == KEY_C1 && IsPassable(x-1,y+1))
+        {
+            x--;
+            y++;
+        }
+        if (ch == KEY_C3 && IsPassable(x+1,y+1))
+        {
+            x++;
+            y++;
         }
 
-        mvaddch(nChangeY,nChangeX,'@');
+        mvaddch(y,x,'@');
         //refresh(); //do I need this?
     }
     endwin();
