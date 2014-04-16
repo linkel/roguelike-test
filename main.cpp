@@ -87,6 +87,16 @@ int OpenDoor(int fMapX, int fMapY)
     return 0;
 }
 
+int CloseDoor(int fMapX, int fMapY)
+{
+    int fTile = firstMapArray[fMapY][fMapX];
+    if(fTile == 3) {
+        firstMapArray[fMapY][fMapX] = 2;
+        DrawMap();
+    }
+    return 0;
+}
+
 bool IsPassable(int fMapX, int fMapY)
 {
     if(fMapX < 0 || fMapX >= MAP_WIDTH || fMapY < 0 || fMapY >= MAP_HEIGHT){
@@ -144,6 +154,22 @@ int main()
         {
             x++;
         }
+        if (ch == KEY_C2 && IsPassable(x,y+1))
+        {
+            y++;
+        }
+        if (ch == KEY_A2 && IsPassable(x,y-1)) //same as above. upper left is 0,0, y increases downwards
+        {
+            y--;
+        }
+        if (ch == KEY_B1 && IsPassable(x-1,y))
+        {
+            x--;
+        }
+        if (ch == KEY_B3 && IsPassable(x+1,y))
+        {
+            x++;
+        }
         if (ch == KEY_A1 && IsPassable(x-1,y-1))
         {
             x--;
@@ -164,6 +190,11 @@ int main()
             x++;
             y++;
         }
+        /*
+        if (ch == 'c' )
+        {
+            cout << "Which direction?"
+        }*/
 
         mvaddch(y,x,'@');
         //refresh(); //do I need this?
