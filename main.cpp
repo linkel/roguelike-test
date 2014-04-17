@@ -198,33 +198,32 @@ int main()
             x++;
             y++;
         }
-/*
+
         if (ch == 'c' )
         {
             int dir;
-            cout << "Which direction?";
+            addstr("Which direction?");
             dir = getch();
-            if (dir == KEY_DOWN && IsDoor(x,y+1))
+            //clear();
+            //DrawMap();
+            if (dir == KEY_DOWN)
             {
-                OpenDoor(x,y+1);
+                CloseDoor(x,y+1);
             }
-            if (dir == KEY_UP && IsDoor(x,y-1))
+            if (dir == KEY_UP)
             {
-                OpenDoor(x,y-1);
+                CloseDoor(x,y-1);
             }
-            if (dir == KEY_LEFT && IsDoor(x-1,y))
+            if (dir == KEY_LEFT)
             {
-                OpenDoor(x-1,y);
+                CloseDoor(x-1,y);
             }
-            if (dir == KEY_RIGHT && IsDoor(x+1,y))
+            if (dir == KEY_RIGHT)
             {
-                OpenDoor(x+1,y);
+                CloseDoor(x+1,y);
             }
-            if (!IsDoor(x+1,y))
-            {
-                cout << "That is not a door!";
-            }
-        }*/
+
+        }
 
         mvaddch(y,x,'@');
         //refresh(); //do I need this?
