@@ -97,6 +97,14 @@ int CloseDoor(int fMapX, int fMapY)
     return 0;
 }
 
+bool IsDoor(int fMapX, int fMapY)
+{
+    int fTile = firstMapArray[fMapY][fMapX];
+    if (fTile == 3) {
+        return true;
+    }
+    return false;
+}
 bool IsPassable(int fMapX, int fMapY)
 {
     if(fMapX < 0 || fMapX >= MAP_WIDTH || fMapY < 0 || fMapY >= MAP_HEIGHT){
@@ -190,10 +198,32 @@ int main()
             x++;
             y++;
         }
-        /*
+/*
         if (ch == 'c' )
         {
-            cout << "Which direction?"
+            int dir;
+            cout << "Which direction?";
+            dir = getch();
+            if (dir == KEY_DOWN && IsDoor(x,y+1))
+            {
+                OpenDoor(x,y+1);
+            }
+            if (dir == KEY_UP && IsDoor(x,y-1))
+            {
+                OpenDoor(x,y-1);
+            }
+            if (dir == KEY_LEFT && IsDoor(x-1,y))
+            {
+                OpenDoor(x-1,y);
+            }
+            if (dir == KEY_RIGHT && IsDoor(x+1,y))
+            {
+                OpenDoor(x+1,y);
+            }
+            if (!IsDoor(x+1,y))
+            {
+                cout << "That is not a door!";
+            }
         }*/
 
         mvaddch(y,x,'@');
