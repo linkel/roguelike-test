@@ -203,9 +203,9 @@ int main()
         {
             int dir;
             addstr("Which direction?");
+            mvaddch(y,x,'@');
+            refresh();
             dir = getch();
-            //clear();
-            //DrawMap();
             if (dir == KEY_DOWN)
             {
                 CloseDoor(x,y+1);
