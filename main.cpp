@@ -142,6 +142,77 @@ int main()
     int ch; //Key input variable
     curs_set(0);
     noecho(); //Turns off echo, which is when input character shows on screen.
+    int nDeX;
+    int nDeY;
+    while(true)
+    {
+        DrawMap();
+        mvaddch(y,x,'@');
+        ch=getch();
+        switch(ch)
+        {
+            case KEY_DOWN:
+                nDeX = 0;
+                nDeY = 1;
+                break;
+            case KEY_UP:
+                nDeX = 0;
+                nDeY = -1;
+                break;
+            case KEY_LEFT:
+                nDeX = -1;
+                nDeY = 0;
+                break;
+            case KEY_RIGHT:
+                nDeX = 1;
+                nDeY = 0;
+                break;
+            case KEY_C2:
+                nDeX = 0;
+                nDeY = 1;
+                break;
+            case KEY_A2:
+                nDeX = 0;
+                nDeY = -1;
+                break;
+            case KEY_B1:
+                nDeX = -1;
+                nDeY = 0;
+                break;
+            case KEY_B3:
+                nDeX = 1;
+                nDeY = 0;
+                break;
+            case KEY_C1:
+                nDeX = -1;
+                nDeY = 1;
+                break;
+            case KEY_C3:
+                nDeX = 1;
+                nDeY = 1;
+                break;
+            case KEY_A1:
+                nDeX = -1;
+                nDeY = -1;
+                break;
+            case KEY_A3:
+                nDeX = 1;
+                nDeY = -1;
+                break;
+            //case 'q':
+            //    return 0;
+            default:
+                break;
+        }
+
+        //Check passability
+        if(IsPassable(x+nDeX, y+nDeY))
+        {
+            x += nDeX;
+            y += nDeY;
+        }
+    }
+    /*
     while('q'!=(ch=getch())) //as long as the character input is not q the program goes on
     {
         DrawMap();
@@ -227,7 +298,7 @@ int main()
 
         mvaddch(y,x,'@');
         //refresh(); //do I need this?
-    }
+    }*/
     endwin();
 
     return 0;
