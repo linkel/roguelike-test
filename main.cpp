@@ -150,8 +150,8 @@ int main()
         mvaddch(y,x,'@');
         nDeX = 0;
         nDeY = 0;
-        ch=getch();
-        switch(ch)
+        //ch=getch();
+        switch(ch=getch())
         {
             case KEY_DOWN:
                 nDeX = 0;
