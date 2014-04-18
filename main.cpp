@@ -148,6 +148,8 @@ int main()
     {
         DrawMap();
         mvaddch(y,x,'@');
+        nDeX = 0;
+        nDeY = 0;
         ch=getch();
         switch(ch)
         {
