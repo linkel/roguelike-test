@@ -201,8 +201,58 @@ int main()
                 nDeX = 1;
                 nDeY = -1;
                 break;
-            //case 'q':
-            //    return 0;
+            //I realized I had to use the ASCII decimal that corresponds to the escape char!
+            case 27: //ESCAPE
+                return 0;
+            case 99: //c key
+                int dir;
+                addstr("Which direction?");
+                mvaddch(y,x,'@');
+                refresh();
+                dir = getch();
+                switch(dir)
+                {
+                case KEY_DOWN:
+                    CloseDoor(x,y+1);
+                    break;
+                case KEY_UP:
+                    CloseDoor(x,y-1);
+                    break;
+                case KEY_LEFT:
+                    CloseDoor(x-1,y);
+                    break;
+                case KEY_RIGHT:
+                    CloseDoor(x+1,y);
+                    break;
+                case KEY_C2:
+                    CloseDoor(x,y+1);
+                    break;
+                case KEY_A2:
+                    CloseDoor(x,y-1);
+                    break;
+                case KEY_B1:
+                    CloseDoor(x-1,y);
+                    break;
+                case KEY_B3:
+                    CloseDoor(x+1,y);
+                    break;
+                case KEY_C1:
+                    CloseDoor(x-1,y+1);
+                    break;
+                case KEY_C3:
+                    CloseDoor(x+1,y+1);
+                    break;
+                case KEY_A1:
+                    CloseDoor(x-1,y-1);
+                    break;
+                case KEY_A3:
+                    CloseDoor(x+1,y-1);
+                    break;
+                }
+                clear(); //This gets rid of the leftover addstr.
+                //refresh(); //Don't seem to need this?
+                break;
+            //If it receives anything else, it gets ignored.
             default:
                 break;
         }
@@ -214,7 +264,8 @@ int main()
             y += nDeY;
         }
     }
-    /*
+
+    /* //This is how I did it originally with the while and if. Will delete this once I get over sentimentality.
     while('q'!=(ch=getch())) //as long as the character input is not q the program goes on
     {
         DrawMap();
