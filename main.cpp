@@ -204,7 +204,7 @@ int main()
             //I realized I had to use the ASCII decimal that corresponds to the escape char!
             case 27: //ESCAPE
                 return 0;
-            case 99: //c key
+            case 'c': //c key
                 int dir;
                 addstr("Which direction?");
                 mvaddch(y,x,'@');
@@ -265,93 +265,6 @@ int main()
         }
     }
 
-    /* //This is how I did it originally with the while and if. Will delete this once I get over sentimentality.
-    while('q'!=(ch=getch())) //as long as the character input is not q the program goes on
-    {
-        DrawMap();
-
-        if (ch == KEY_DOWN && IsPassable(x,y+1))
-        {
-            y++;
-        }
-        if (ch == KEY_UP && IsPassable(x,y-1)) //same as above. upper left is 0,0, y increases downwards
-        {
-            y--;
-        }
-        if (ch == KEY_LEFT && IsPassable(x-1,y))
-        {
-            x--;
-        }
-        if (ch == KEY_RIGHT && IsPassable(x+1,y))
-        {
-            x++;
-        }
-        if (ch == KEY_C2 && IsPassable(x,y+1))
-        {
-            y++;
-        }
-        if (ch == KEY_A2 && IsPassable(x,y-1)) //same as above. upper left is 0,0, y increases downwards
-        {
-            y--;
-        }
-        if (ch == KEY_B1 && IsPassable(x-1,y))
-        {
-            x--;
-        }
-        if (ch == KEY_B3 && IsPassable(x+1,y))
-        {
-            x++;
-        }
-        if (ch == KEY_A1 && IsPassable(x-1,y-1))
-        {
-            x--;
-            y--;
-        }
-        if (ch == KEY_A3 && IsPassable(x+1,y-1))
-        {
-            x++;
-            y--;
-        }
-        if (ch == KEY_C1 && IsPassable(x-1,y+1))
-        {
-            x--;
-            y++;
-        }
-        if (ch == KEY_C3 && IsPassable(x+1,y+1))
-        {
-            x++;
-            y++;
-        }
-
-        if (ch == 'c' )
-        {
-            int dir;
-            addstr("Which direction?");
-            mvaddch(y,x,'@');
-            refresh();
-            dir = getch();
-            if (dir == KEY_DOWN)
-            {
-                CloseDoor(x,y+1);
-            }
-            if (dir == KEY_UP)
-            {
-                CloseDoor(x,y-1);
-            }
-            if (dir == KEY_LEFT)
-            {
-                CloseDoor(x-1,y);
-            }
-            if (dir == KEY_RIGHT)
-            {
-                CloseDoor(x+1,y);
-            }
-
-        }
-
-        mvaddch(y,x,'@');
-        //refresh(); //do I need this?
-    }*/
     endwin();
 
     return 0;
