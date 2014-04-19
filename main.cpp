@@ -97,16 +97,18 @@ void ColorInit (void)
 
 void DrawTile(int x, int y)
 {
-    int nType = fMapArray[y][x];
+
 
     if(fItemArray[y][x] != ITEM_EMPTY)
     {
+        int nType = fItemArray[y][x];
         attron(COLOR_PAIR(sItemIndex[nType].nColorPair));
         mvaddch(y,x,sItemIndex[nType].nCharacter);
         attroff(COLOR_PAIR(sItemIndex[nType].nColorPair));
     }
     else
     {
+        int nType = fMapArray[y][x];
         attron(COLOR_PAIR(sTileIndex[nType].nColorPair));
         mvaddch(y,x,sTileIndex[nType].nCharacter);
         attroff(COLOR_PAIR(sTileIndex[nType].nColorPair));
