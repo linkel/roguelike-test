@@ -9,15 +9,7 @@ using namespace std;
 #define MAP_WIDTH 20
 #define MAP_HEIGHT 15
 
-/*
-//Tiles. I don't think I need this anymore after rewriting the tile type code.
-#define TILE_FLOOR 0
-#define TILE_WALL 1
-#define TILE_CLOSEDDOOR 2
-#define TILE_OPENDOOR 3
-*/
-
-int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
+int fMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },
     { 0, 0, 1, 2, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 4, 4, 4 },
@@ -35,12 +27,37 @@ int firstMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
+int fItemArray[MAP_HEIGHT][MAP_WIDTH] = {
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+};
+
+//These are types of tiles!
 struct TILE_TYPE
 {
     char nCharacter;
     bool bPassable;
     short nColorPair;
 };
+
+#define TILE_FLOOR 0
+#define TILE_WALL 1
+#define TILE_CLOSEDDOOR 2
+#define TILE_OPENDOOR 3
+#define TILE_WATER 4
 
 TILE_TYPE sTileIndex[] = {
     {'.', TRUE, 5},    //(0) TILE_FLOOR
@@ -50,6 +67,23 @@ TILE_TYPE sTileIndex[] = {
     {'~', FALSE, 6},   //(4) TILE_WATER
 };
 
+struct ITEM_TYPE
+{
+
+    char nCharacter;
+    char * pName;
+    short nColorPair;
+};
+
+#define ITEM_EMPTY 0
+
+ITEM_TYPE sItemIndex[] = {
+    { ' ',  "Empty", 5},        //(0) Empty
+    { '!', "Potion", 3},  //(1) Potion
+    { 'b', "Throwing stone", 5},//(2) Throwing stone
+    { '/', "Short sword", 5},   //(3) Short sword
+
+};
 
 void ColorInit (void)
 {
@@ -63,10 +97,20 @@ void ColorInit (void)
 
 void DrawTile(int x, int y)
 {
-    int nType = firstMapArray[y][x];
-    attron(COLOR_PAIR(sTileIndex[nType].nColorPair));
-    mvaddch(y,x,sTileIndex[nType].nCharacter);
-    attroff(COLOR_PAIR(sTileIndex[nType].nColorPair));
+    int nType = fMapArray[y][x];
+
+    if(fItemArray[y][x] != ITEM_EMPTY)
+    {
+        attron(COLOR_PAIR(sItemIndex[nType].nColorPair));
+        mvaddch(y,x,sItemIndex[nType].nCharacter);
+        attroff(COLOR_PAIR(sItemIndex[nType].nColorPair));
+    }
+    else
+    {
+        attron(COLOR_PAIR(sTileIndex[nType].nColorPair));
+        mvaddch(y,x,sTileIndex[nType].nCharacter);
+        attroff(COLOR_PAIR(sTileIndex[nType].nColorPair));
+    }
 }
 
 void DrawMap(void)
@@ -82,16 +126,16 @@ void DrawMap(void)
 
 int OpenDoor(int fMapX, int fMapY)
 {
-    firstMapArray[fMapY][fMapX] = 3;
+    fMapArray[fMapY][fMapX] = 3;
     DrawMap();
     return 0;
 }
 
 int CloseDoor(int fMapX, int fMapY)
 {
-    int fTile = firstMapArray[fMapY][fMapX];
+    int fTile = fMapArray[fMapY][fMapX];
     if(fTile == 3) {
-        firstMapArray[fMapY][fMapX] = 2;
+        fMapArray[fMapY][fMapX] = 2;
         DrawMap();
     }
     return 0;
@@ -99,7 +143,7 @@ int CloseDoor(int fMapX, int fMapY)
 
 bool IsDoor(int fMapX, int fMapY)
 {
-    int fTile = firstMapArray[fMapY][fMapX];
+    int fTile = fMapArray[fMapY][fMapX];
     if (fTile == 3) {
         return true;
     }
@@ -110,7 +154,7 @@ bool IsPassable(int fMapX, int fMapY)
     if(fMapX < 0 || fMapX >= MAP_WIDTH || fMapY < 0 || fMapY >= MAP_HEIGHT){
         return false;
     }
-    int fTile = firstMapArray[fMapY][fMapX];
+    int fTile = fMapArray[fMapY][fMapX];
 
     //If it is a closed door, runs opendoor function.
     if(fTile == 2) {
