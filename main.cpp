@@ -28,8 +28,8 @@ int nMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-//int nItemArray[MAP_HEIGHT][MAP_WIDTH];
-
+int nItemArray[MAP_HEIGHT][MAP_WIDTH];
+/*
 int nItemArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -47,7 +47,7 @@ int nItemArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-
+*/
 
 //initialized player inventory
 #define INV_SLOTS 5
@@ -84,16 +84,19 @@ struct ITEM_TYPE
 };
 
 #define ITEM_EMPTY 0
-#define ITEM_POTION 1
+#define ITEM_BOTTLEWINE 1
 #define ITEM_THROWINGSTONE 2
 #define ITEM_SHORTSWORD 3
+#define ITEM_SKELETONKEY 4
+#define ITEM_PICKAXE 5
 
 ITEM_TYPE sItemIndex[] = {
     { ' ',  "Empty", 5},        //(0) Empty
-    { '!', "potion", 3},  //(1) Potion
+    { '!', "bottle of wine", 2},  //(1) Bottle of wine!
     { '*', "throwing stone", 5},//(2) Throwing stone
     { '/', "short sword", 5},   //(3) Short sword
-
+    { ',', "skeleton key", 1},
+    { '(', "pickaxe", 5},
 };
 
 void ColorInit (void)
@@ -222,11 +225,13 @@ int main()
     //Maybe should find a safer way to do this besides memset, heard it circumvents type safety
     //ArrInit nItemArray; //Trying this out instead of memset NOPE
 
-    //memset(nItemArray, 0, sizeof(nItemArray)); //Initializes the item map with 0
+    memset(nItemArray, 0, sizeof(nItemArray)); //Initializes the item map with 0
     //Testing the items for now
     nItemArray[3][1] = ITEM_SHORTSWORD;
-    nItemArray[5][5] = ITEM_POTION;
+    nItemArray[5][5] = ITEM_BOTTLEWINE;
     nItemArray[1][8] = ITEM_THROWINGSTONE;
+    nItemArray[1][7] = ITEM_PICKAXE;
+    nItemArray[5][4] = ITEM_SKELETONKEY;
 
 
     //init_color(COLOR_YELLOW, 220, 210, 0); //Not sure if my commandline can change colors
@@ -244,6 +249,13 @@ int main()
         DrawMap();
         ShowInventory();
         mvaddch(y,x,'@');
+        if(nItemArray[y][x] != ITEM_EMPTY)
+        {
+            int nItemType = nItemArray[y][x];
+            mvaddstr(MAP_HEIGHT + 3, 2, "You see here a ");
+            addstr(sItemIndex[nItemType].pName);
+            addstr(".");
+        }
         nDeX = 0;
         nDeY = 0;
         //ch=getch();
@@ -368,6 +380,7 @@ int main()
             x += nDeX;
             y += nDeY;
         }
+        clear();
     }
 
     endwin();
@@ -380,6 +393,7 @@ void GetCommand(int nMapX, int nMapY)
     if(nItemArray[nMapY][nMapX] == ITEM_EMPTY)
     {
         mvaddstr(MAP_HEIGHT + 2, 2,"There is nothing here to pick up!");
+        getch();
         return;
     }
     //The picking up part
