@@ -28,8 +28,8 @@ int nMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-int nItemArray[MAP_HEIGHT][MAP_WIDTH];
-/*
+//int nItemArray[MAP_HEIGHT][MAP_WIDTH];
+
 int nItemArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -47,7 +47,7 @@ int nItemArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-*/
+
 
 //initialized player inventory
 #define INV_SLOTS 5
@@ -106,25 +106,8 @@ void ColorInit (void)
     init_pair(6, COLOR_BLUE, COLOR_BLUE);
 }
 
-void DrawTile(int x, int y)
-{
+void DrawTile(int x, int y);
 
-
-    if(nItemArray[y][x] != ITEM_EMPTY)
-    {
-        int nType = nItemArray[y][x];
-        attron(COLOR_PAIR(sItemIndex[nType].nColorPair));
-        mvaddch(y,x,sItemIndex[nType].nCharacter);
-        attroff(COLOR_PAIR(sItemIndex[nType].nColorPair));
-    }
-    else
-    {
-        int nType = nMapArray[y][x];
-        attron(COLOR_PAIR(sTileIndex[nType].nColorPair));
-        mvaddch(y,x,sTileIndex[nType].nCharacter);
-        attroff(COLOR_PAIR(sTileIndex[nType].nColorPair));
-    }
-}
 
 void DrawMap(void)
 {
@@ -190,6 +173,7 @@ bool IsPassable(int nMapX, int nMapY)
     */
 }
 
+
 void ShowInventory(void)
 {
     mvaddstr(1,MAP_WIDTH + 3, "Inventory:");
@@ -207,19 +191,43 @@ void ShowInventory(void)
         addstr(sItemIndex[nItemType].pName);
     }
 }
+/*
+class ArrInit
+{
+    int nItemArray[MAP_HEIGHT][MAP_WIDTH];
+public:
+    ArrInit();
+//private:
 
+};
 
+ArrInit::ArrInit()
+{
+    for(int h = 0; h < MAP_HEIGHT; ++h){
+            for(int w = 0; w < MAP_WIDTH; ++w){
+                nItemArray[h][w] = 0;
+            }
+    }
+    //Testing the items for now
+    nItemArray[3][1] = ITEM_SHORTSWORD;
+    nItemArray[5][5] = ITEM_POTION;
+    nItemArray[1][8] = ITEM_THROWINGSTONE;
+}
+*/
 int main()
 {
     initscr();
     keypad(stdscr,1);
     start_color();
     //Maybe should find a safer way to do this besides memset, heard it circumvents type safety
-    memset(nItemArray, 0, sizeof(nItemArray)); //Initializes the item map with 0
+    //ArrInit nItemArray; //Trying this out instead of memset NOPE
+
+    //memset(nItemArray, 0, sizeof(nItemArray)); //Initializes the item map with 0
     //Testing the items for now
     nItemArray[3][1] = ITEM_SHORTSWORD;
     nItemArray[5][5] = ITEM_POTION;
     nItemArray[1][8] = ITEM_THROWINGSTONE;
+
 
     //init_color(COLOR_YELLOW, 220, 210, 0); //Not sure if my commandline can change colors
     ColorInit();
@@ -288,6 +296,9 @@ int main()
             case KEY_A3:
                 nDeX = 1;
                 nDeY = -1;
+                break;
+            case 'b': //testing ASCII codes
+                mvaddch(MAP_HEIGHT + 4, 2, ch);
                 break;
             //I realized I had to use the ASCII decimal that corresponds to the escape char!
             case 27: //ESCAPE
@@ -377,6 +388,7 @@ void GetCommand(int nMapX, int nMapY)
         //Looks for empty slot in inventory.
         if (nInventory[i]==ITEM_EMPTY)
         {
+            //Copies item from map array into inventory.
             nInventory[i] = nItemArray[nMapY][nMapX];
             //Removes item from item map array.
             nItemArray[nMapY][nMapX] = ITEM_EMPTY;
@@ -395,32 +407,63 @@ void GetCommand(int nMapX, int nMapY)
 void DropCommand(int nMapX, int nMapY)
 {
     mvaddstr(MAP_HEIGHT + 2, 2, "What do you want to drop?");
-    int input = getch();
-    int slot = input - 97;
+    int input;
+    int slot;
+    input = getch();
+    slot = input - 'a';//Uses ASCII codes to turn it into numbers for the array.
+
     //Check that it is valid input.
     if (slot < 0 || slot >= INV_SLOTS)
     {
         mvaddstr(MAP_HEIGHT + 2, 2, "That's not a valid inventory slot. ");
-        addstr("Dropping aborted.");
+        getch();
     }
     //Check that there is an item in the slot.
-    else if(nInventory[slot] = ITEM_EMPTY)
+    else if(nInventory[slot] == ITEM_EMPTY)
     {
         mvaddstr(MAP_HEIGHT + 2, 2, "You don't have an item in that slot! ");
-        addstr("Dropping aborted.");
+        getch();
     }
     //Check that there is free space on the ground.
     else if(nItemArray[nMapY][nMapX] != ITEM_EMPTY)
     {
         mvaddstr(MAP_HEIGHT + 2, 2, "No space to drop item here. ");
-        addstr("Dropping aborted.");
+        getch();
     }
     else
     {
+        clear();
+        int nItemType = nInventory[slot];
         nItemArray[nMapY][nMapX] = nInventory[slot];
         nInventory[slot] = ITEM_EMPTY;
+        mvaddstr(MAP_HEIGHT + 2, 2, "Dropped ");
+        addstr(sItemIndex[nItemType].pName);
+        addstr(".");
+        return;
     }
+
     clear();
+    return;
 //Bugs: Words get overwritten, doesn't clear? The dropping aborted doesn't show up.
 //Dropped items are not appearing on the map array.
+}
+
+void DrawTile(int x, int y)
+{
+
+
+    if(nItemArray[y][x] != ITEM_EMPTY)
+    {
+        int nType = nItemArray[y][x];
+        attron(COLOR_PAIR(sItemIndex[nType].nColorPair));
+        mvaddch(y,x,sItemIndex[nType].nCharacter);
+        attroff(COLOR_PAIR(sItemIndex[nType].nColorPair));
+    }
+    else
+    {
+        int nType = nMapArray[y][x];
+        attron(COLOR_PAIR(sTileIndex[nType].nColorPair));
+        mvaddch(y,x,sTileIndex[nType].nCharacter);
+        attroff(COLOR_PAIR(sTileIndex[nType].nColorPair));
+    }
 }
