@@ -1,5 +1,6 @@
 # depslib dependency file v1.0
-1397876523 source:c:\users\qb\workspace\roguetest\main.cpp
+1397891807 source:c:\users\qb\workspace\roguetest\main.cpp
 	<iostream>
 	<curses.h>
+	<string.h>
 

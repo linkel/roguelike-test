@@ -1,5 +1,6 @@
 #include <iostream>
 #include <curses.h>
+#include <string.h>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ using namespace std;
 #define MAP_WIDTH 20
 #define MAP_HEIGHT 15
 
-int fMapArray[MAP_HEIGHT][MAP_WIDTH] = {
+int nMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },
     { 0, 0, 1, 2, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 4, 4, 4 },
@@ -27,7 +28,9 @@ int fMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-int fItemArray[MAP_HEIGHT][MAP_WIDTH] = {
+int nItemArray[MAP_HEIGHT][MAP_WIDTH];
+/*
+int nItemArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 3, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -44,6 +47,11 @@ int fItemArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
+*/
+
+//initialized player inventory
+#define INV_SLOTS 5
+int nInventory[5] = {0, 0, 0, 0, 0};
 
 //These are types of tiles!
 struct TILE_TYPE
@@ -76,12 +84,15 @@ struct ITEM_TYPE
 };
 
 #define ITEM_EMPTY 0
+#define ITEM_POTION 1
+#define ITEM_THROWINGSTONE 2
+#define ITEM_SHORTSWORD 3
 
 ITEM_TYPE sItemIndex[] = {
     { ' ',  "Empty", 5},        //(0) Empty
-    { '!', "Potion", 3},  //(1) Potion
-    { 'b', "Throwing stone", 5},//(2) Throwing stone
-    { '/', "Short sword", 5},   //(3) Short sword
+    { '!', "potion", 3},  //(1) Potion
+    { '*', "throwing stone", 5},//(2) Throwing stone
+    { '/', "short sword", 5},   //(3) Short sword
 
 };
 
@@ -99,16 +110,16 @@ void DrawTile(int x, int y)
 {
 
 
-    if(fItemArray[y][x] != ITEM_EMPTY)
+    if(nItemArray[y][x] != ITEM_EMPTY)
     {
-        int nType = fItemArray[y][x];
+        int nType = nItemArray[y][x];
         attron(COLOR_PAIR(sItemIndex[nType].nColorPair));
         mvaddch(y,x,sItemIndex[nType].nCharacter);
         attroff(COLOR_PAIR(sItemIndex[nType].nColorPair));
     }
     else
     {
-        int nType = fMapArray[y][x];
+        int nType = nMapArray[y][x];
         attron(COLOR_PAIR(sTileIndex[nType].nColorPair));
         mvaddch(y,x,sTileIndex[nType].nCharacter);
         attroff(COLOR_PAIR(sTileIndex[nType].nColorPair));
@@ -126,41 +137,45 @@ void DrawMap(void)
     }
 }
 
-int OpenDoor(int fMapX, int fMapY)
+void OpenDoor(int nMapX, int nMapY)
 {
-    fMapArray[fMapY][fMapX] = 3;
+    nMapArray[nMapY][nMapX] = 3;
     DrawMap();
-    return 0;
 }
 
-int CloseDoor(int fMapX, int fMapY)
+void CloseDoor(int nMapX, int nMapY)
 {
-    int fTile = fMapArray[fMapY][fMapX];
+    int fTile = nMapArray[nMapY][nMapX];
     if(fTile == 3) {
-        fMapArray[fMapY][fMapX] = 2;
+        nMapArray[nMapY][nMapX] = 2;
         DrawMap();
     }
-    return 0;
 }
 
-bool IsDoor(int fMapX, int fMapY)
+void GetCommand(int nMapX, int nMapY);
+void DropCommand(int nMapX, int nMapY);
+
+
+bool IsDoor(int nMapX, int nMapY)
 {
-    int fTile = fMapArray[fMapY][fMapX];
+    int fTile = nMapArray[nMapY][nMapX];
     if (fTile == 3) {
         return true;
     }
     return false;
 }
-bool IsPassable(int fMapX, int fMapY)
+
+
+bool IsPassable(int nMapX, int nMapY)
 {
-    if(fMapX < 0 || fMapX >= MAP_WIDTH || fMapY < 0 || fMapY >= MAP_HEIGHT){
+    if(nMapX < 0 || nMapX >= MAP_WIDTH || nMapY < 0 || nMapY >= MAP_HEIGHT){
         return false;
     }
-    int fTile = fMapArray[fMapY][fMapX];
+    int fTile = nMapArray[nMapY][nMapX];
 
     //If it is a closed door, runs opendoor function.
     if(fTile == 2) {
-        OpenDoor(fMapX, fMapY);
+        OpenDoor(nMapX, nMapY);
         return false;
     }
 
@@ -175,11 +190,37 @@ bool IsPassable(int fMapX, int fMapY)
     */
 }
 
+void ShowInventory(void)
+{
+    mvaddstr(1,MAP_WIDTH + 3, "Inventory:");
+    mvaddstr(2,MAP_WIDTH + 3, "----------");
+
+    for (int i = 0; i < INV_SLOTS; i++)
+    {
+        //Get the item type being stored in the array.
+        int nItemType = nInventory[i];
+        //Draw the item's name onto the screen
+        //Addstr adds where the cursor left off.
+        //Wonder if I should care to put the cursor back at 0,0?
+        mvaddch(3+i, MAP_WIDTH + 2, 'a'+ i);
+        addstr(": ");
+        addstr(sItemIndex[nItemType].pName);
+    }
+}
+
+
 int main()
 {
     initscr();
     keypad(stdscr,1);
     start_color();
+    //Maybe should find a safer way to do this besides memset, heard it circumvents type safety
+    memset(nItemArray, 0, sizeof(nItemArray)); //Initializes the item map with 0
+    //Testing the items for now
+    nItemArray[3][1] = ITEM_SHORTSWORD;
+    nItemArray[5][5] = ITEM_POTION;
+    nItemArray[1][8] = ITEM_THROWINGSTONE;
+
     //init_color(COLOR_YELLOW, 220, 210, 0); //Not sure if my commandline can change colors
     ColorInit();
     //Location variables
@@ -193,6 +234,7 @@ int main()
     while(true)
     {
         DrawMap();
+        ShowInventory();
         mvaddch(y,x,'@');
         nDeX = 0;
         nDeY = 0;
@@ -252,7 +294,7 @@ int main()
                 return 0;
             case 'c': //c key
                 int dir;
-                addstr("Which direction?");
+                mvaddstr(MAP_HEIGHT + 2, 2,"Which direction?");
                 mvaddch(y,x,'@');
                 refresh();
                 dir = getch();
@@ -298,6 +340,12 @@ int main()
                 clear(); //This gets rid of the leftover addstr.
                 //refresh(); //Don't seem to need this?
                 break;
+            case 'g':
+                GetCommand(x,y);
+                break;
+            case 'd':
+                DropCommand(x,y);
+                break;
             //If it receives anything else, it gets ignored.
             default:
                 break;
@@ -316,4 +364,63 @@ int main()
     return 0;
 }
 
+void GetCommand(int nMapX, int nMapY)
+{
+    if(nItemArray[nMapY][nMapX] == ITEM_EMPTY)
+    {
+        mvaddstr(MAP_HEIGHT + 2, 2,"There is nothing here to pick up!");
+        return;
+    }
+    //The picking up part
+    for(int i = 0; i < INV_SLOTS; i++)
+    {
+        //Looks for empty slot in inventory.
+        if (nInventory[i]==ITEM_EMPTY)
+        {
+            nInventory[i] = nItemArray[nMapY][nMapX];
+            //Removes item from item map array.
+            nItemArray[nMapY][nMapX] = ITEM_EMPTY;
+            //This nItemType lets me get the name of the item.
+            int nItemType = nInventory[i];
+            mvaddstr(MAP_HEIGHT + 2, 2, "Picked up ");
+            addstr(sItemIndex[nItemType].pName);
+            addstr(".");
+            return;
+        }
+    }
+    mvaddstr(MAP_HEIGHT + 2, 2, "You can't carry anymore!");
+    return;
+}
 
+void DropCommand(int nMapX, int nMapY)
+{
+    mvaddstr(MAP_HEIGHT + 2, 2, "What do you want to drop?");
+    int input = getch();
+    int slot = input - 97;
+    //Check that it is valid input.
+    if (slot < 0 || slot >= INV_SLOTS)
+    {
+        mvaddstr(MAP_HEIGHT + 2, 2, "That's not a valid inventory slot. ");
+        addstr("Dropping aborted.");
+    }
+    //Check that there is an item in the slot.
+    else if(nInventory[slot] = ITEM_EMPTY)
+    {
+        mvaddstr(MAP_HEIGHT + 2, 2, "You don't have an item in that slot! ");
+        addstr("Dropping aborted.");
+    }
+    //Check that there is free space on the ground.
+    else if(nItemArray[nMapY][nMapX] != ITEM_EMPTY)
+    {
+        mvaddstr(MAP_HEIGHT + 2, 2, "No space to drop item here. ");
+        addstr("Dropping aborted.");
+    }
+    else
+    {
+        nItemArray[nMapY][nMapX] = nInventory[slot];
+        nInventory[slot] = ITEM_EMPTY;
+    }
+    clear();
+//Bugs: Words get overwritten, doesn't clear? The dropping aborted doesn't show up.
+//Dropped items are not appearing on the map array.
+}
