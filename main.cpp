@@ -79,7 +79,7 @@ struct ITEM_TYPE
 {
 
     char nCharacter;
-    char * pName;
+    const char * pName;
     short nColorPair;
 };
 
@@ -140,7 +140,7 @@ void CloseDoor(int nMapX, int nMapY)
 
 void GetCommand(int nMapX, int nMapY);
 void DropCommand(int nMapX, int nMapY);
-
+void UseItem(void);
 
 bool IsDoor(int nMapX, int nMapY)
 {
@@ -194,6 +194,8 @@ void ShowInventory(void)
         addstr(sItemIndex[nItemType].pName);
     }
 }
+//Saw this code online that people said was a better way to
+//write zeros instead of memset.
 /*
 class ArrInit
 {
@@ -223,7 +225,7 @@ int main()
     keypad(stdscr,1);
     start_color();
     //Maybe should find a safer way to do this besides memset, heard it circumvents type safety
-    //ArrInit nItemArray; //Trying this out instead of memset NOPE
+    //ArrInit nItemArray; //Trying this out instead of memset NOPE NOT FOR NOW
 
     memset(nItemArray, 0, sizeof(nItemArray)); //Initializes the item map with 0
     //Testing the items for now
@@ -369,6 +371,9 @@ int main()
             case 'd':
                 DropCommand(x,y);
                 break;
+            case 'u':
+                UseItem();
+                break;
             //If it receives anything else, it gets ignored.
             default:
                 break;
@@ -462,6 +467,35 @@ void DropCommand(int nMapX, int nMapY)
 //Dropped items are not appearing on the map array.
 }
 
+void UseItem(void)
+{
+    mvaddstr(MAP_HEIGHT + 2, 2, "What do you want to use?");
+    int input;
+    int slot;
+    input = getch();
+    slot = input - 'a';
+    if (slot < 0 || slot >= INV_SLOTS)
+        {
+            mvaddstr(MAP_HEIGHT + 2, 2, "That's not a valid inventory slot. ");
+            getch();
+        }
+        //Check that there is an item in the slot.
+    switch(nInventory[slot])
+    {
+        case ITEM_EMPTY:
+            mvaddstr(MAP_HEIGHT + 2, 2, "You don't have an item in that slot! ");
+            getch();
+            break;
+        default:
+            int nItemType = nInventory[slot];
+            mvaddstr(MAP_HEIGHT + 2, 2, "You fiddle with your ");
+            addstr(sItemIndex[nItemType].pName);
+            addstr(".");
+            getch();
+            break;
+    }
+    clear();
+}
 void DrawTile(int x, int y)
 {
 
