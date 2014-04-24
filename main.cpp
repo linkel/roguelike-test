@@ -137,6 +137,55 @@ void CloseDoor(int nMapX, int nMapY)
         DrawMap();
     }
 }
+void CloseCommand (int x, int y)
+{
+                int dir;
+                mvaddstr(MAP_HEIGHT + 2, 2,"Which direction?");
+                mvaddch(y,x,'@');
+                refresh();
+                dir = getch();
+                switch(dir)
+                {
+                case KEY_DOWN:
+                    CloseDoor(x,y+1);
+                    break;
+                case KEY_UP:
+                    CloseDoor(x,y-1);
+                    break;
+                case KEY_LEFT:
+                    CloseDoor(x-1,y);
+                    break;
+                case KEY_RIGHT:
+                    CloseDoor(x+1,y);
+                    break;
+                case KEY_C2:
+                    CloseDoor(x,y+1);
+                    break;
+                case KEY_A2:
+                    CloseDoor(x,y-1);
+                    break;
+                case KEY_B1:
+                    CloseDoor(x-1,y);
+                    break;
+                case KEY_B3:
+                    CloseDoor(x+1,y);
+                    break;
+                case KEY_C1:
+                    CloseDoor(x-1,y+1);
+                    break;
+                case KEY_C3:
+                    CloseDoor(x+1,y+1);
+                    break;
+                case KEY_A1:
+                    CloseDoor(x-1,y-1);
+                    break;
+                case KEY_A3:
+                    CloseDoor(x+1,y-1);
+                    break;
+                }
+                clear();
+}
+
 
 void GetCommand(int nMapX, int nMapY);
 void DropCommand(int nMapX, int nMapY);
@@ -318,52 +367,7 @@ int main()
             case 27: //ESCAPE
                 return 0;
             case 'c': //c key
-                int dir;
-                mvaddstr(MAP_HEIGHT + 2, 2,"Which direction?");
-                mvaddch(y,x,'@');
-                refresh();
-                dir = getch();
-                switch(dir)
-                {
-                case KEY_DOWN:
-                    CloseDoor(x,y+1);
-                    break;
-                case KEY_UP:
-                    CloseDoor(x,y-1);
-                    break;
-                case KEY_LEFT:
-                    CloseDoor(x-1,y);
-                    break;
-                case KEY_RIGHT:
-                    CloseDoor(x+1,y);
-                    break;
-                case KEY_C2:
-                    CloseDoor(x,y+1);
-                    break;
-                case KEY_A2:
-                    CloseDoor(x,y-1);
-                    break;
-                case KEY_B1:
-                    CloseDoor(x-1,y);
-                    break;
-                case KEY_B3:
-                    CloseDoor(x+1,y);
-                    break;
-                case KEY_C1:
-                    CloseDoor(x-1,y+1);
-                    break;
-                case KEY_C3:
-                    CloseDoor(x+1,y+1);
-                    break;
-                case KEY_A1:
-                    CloseDoor(x-1,y-1);
-                    break;
-                case KEY_A3:
-                    CloseDoor(x+1,y-1);
-                    break;
-                }
-                clear(); //This gets rid of the leftover addstr.
-                //refresh(); //Don't seem to need this?
+                CloseCommand(x,y);
                 break;
             case 'g':
                 GetCommand(x,y);
@@ -392,6 +396,7 @@ int main()
 
     return 0;
 }
+
 
 void GetCommand(int nMapX, int nMapY)
 {
