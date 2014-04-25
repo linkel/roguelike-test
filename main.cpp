@@ -137,6 +137,8 @@ void CloseDoor(int nMapX, int nMapY)
         DrawMap();
     }
 }
+
+//Can I put these commands together? So confusing to read.
 void CloseCommand (int x, int y)
 {
                 int dir;
@@ -186,7 +188,7 @@ void CloseCommand (int x, int y)
                 clear();
 }
 
-
+//Thinking of reorganizing somehow.
 void GetCommand(int nMapX, int nMapY);
 void DropCommand(int nMapX, int nMapY);
 void UseItem(void);
