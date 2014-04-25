@@ -474,6 +474,7 @@ void DropCommand(int nMapX, int nMapY)
 //Dropped items are not appearing on the map array.
 }
 
+//switch case seems useful for inventory selection and use. Should there be array for inventory items?
 void UseItem(void)
 {
     mvaddstr(MAP_HEIGHT + 2, 2, "What do you want to use?");
