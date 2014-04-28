@@ -10,6 +10,7 @@ class Actor
         //virtual ~Actor();
         void SetAppearance(char nDisplayChar, short nColorPair);
         void SetPos(int x, int y);
+        void Draw(void);
     protected:
         int nPosX;
         int nPosY;

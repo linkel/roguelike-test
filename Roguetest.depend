@@ -1,6 +1,13 @@
 # depslib dependency file v1.0
-1398469948 source:c:\users\qb\workspace\roguetest\main.cpp
+1398724875 source:c:\users\qb\workspace\roguetest\main.cpp
 	<iostream>
 	<curses.h>
 	<string.h>
+	"Actor.h"
+
+1398725059 source:c:\users\qb\workspace\roguetest\src\actor.cpp
+	"Actor.h"
+	<curses.h>
+
+1398724499 c:\users\qb\workspace\roguetest\include\actor.h
 

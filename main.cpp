@@ -1,6 +1,7 @@
 #include <iostream>
 #include <curses.h>
 #include <string.h>
+#include "Actor.h"
 
 using namespace std;
 
@@ -287,8 +288,14 @@ int main()
     nItemArray[5][4] = ITEM_SKELETONKEY;
 
 
+
     //init_color(COLOR_YELLOW, 220, 210, 0); //Not sure if my commandline can change colors
     ColorInit();
+
+    //Initializing some actors to test
+    Actor npc;
+    npc.SetAppearance('@',4);
+    npc.SetPos(18,13);
     //Location variables
     int x = 1;
     int y = 1;
@@ -300,6 +307,8 @@ int main()
     while(true)
     {
         DrawMap();
+        //Draws the one NPC
+        npc.Draw();
         ShowInventory();
         mvaddch(y,x,'@');
         if(nItemArray[y][x] != ITEM_EMPTY)

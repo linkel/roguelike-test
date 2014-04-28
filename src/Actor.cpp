@@ -1,4 +1,5 @@
 #include "Actor.h"
+#include <curses.h>
 
 #define MAP_WIDTH 20
 #define MAP_HEIGHT 15
@@ -22,6 +23,17 @@ void Actor::SetPos(int x, int y)
     }
     this->nPosX = x;
     this->nPosY = y;
+}
+
+void Actor::Draw(void)
+{
+    if((this->nPosX<0)|| (this ->nPosX>= MAP_WIDTH)|| (this->nPosY<0)||(this->nPosY >= MAP_HEIGHT))
+    {
+        return;
+    }
+    attron(COLOR_PAIR(this->nColorPair));
+    mvaddch(this->nPosY,this->nPosX,this->nDisplayChar);
+    attroff(COLOR_PAIR(this->nColorPair));
 }
 
 
