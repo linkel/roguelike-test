@@ -287,8 +287,6 @@ int main()
     nItemArray[1][7] = ITEM_PICKAXE;
     nItemArray[5][4] = ITEM_SKELETONKEY;
 
-
-
     //init_color(COLOR_YELLOW, 220, 210, 0); //Not sure if my commandline can change colors
     ColorInit();
 
