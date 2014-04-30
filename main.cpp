@@ -266,6 +266,7 @@ ArrInit::ArrInit()
             }
     }
     //Testing the items for now
+
     nItemArray[3][1] = ITEM_SHORTSWORD;
     nItemArray[5][5] = ITEM_POTION;
     nItemArray[1][8] = ITEM_THROWINGSTONE;
