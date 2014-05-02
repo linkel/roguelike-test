@@ -2,14 +2,13 @@
 #include <curses.h>
 #include <string.h>
 #include "Actor.h"
+#include "MapSize.h"
 
 using namespace std;
 
 //This is the map! It is an array that holds a bunch of chars.
 
-//Map dimensions
-#define MAP_WIDTH 20
-#define MAP_HEIGHT 15
+
 
 int nMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },

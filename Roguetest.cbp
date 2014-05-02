@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add library="C:\Users\QB\workspace\PDCURSES\pdcurses.lib" />
@@ -25,6 +26,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -35,7 +37,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Actor.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Actor.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

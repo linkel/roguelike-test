@@ -1,8 +1,11 @@
 #include "Actor.h"
 #include <curses.h>
+#include "MapSize.h"
 
+/*
 #define MAP_WIDTH 20
 #define MAP_HEIGHT 15
+*/
 
 Actor::Actor(void)
 {
