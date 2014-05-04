@@ -5,9 +5,12 @@
 	<string.h>
 	"Actor.h"
 
-1398725059 source:c:\users\qb\workspace\roguetest\src\actor.cpp
+1399019871 source:c:\users\qb\workspace\roguetest\src\actor.cpp
 	"Actor.h"
 	<curses.h>
+	"MapSize.h"
 
 1398751451 c:\users\qb\workspace\roguetest\include\actor.h
+
+1399019871 c:\users\qb\workspace\roguetest\include\mapsize.h
 

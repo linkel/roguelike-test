@@ -8,8 +8,6 @@ using namespace std;
 
 //This is the map! It is an array that holds a bunch of chars.
 
-
-
 int nMapArray[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4 },
@@ -271,6 +269,8 @@ ArrInit::ArrInit()
     nItemArray[1][8] = ITEM_THROWINGSTONE;
 }
 */
+
+//main fn
 int main()
 {
     initscr();
