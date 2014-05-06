@@ -400,7 +400,7 @@ int main()
         }
         clear();
     }
-
+    //Stops the curses window.
     endwin();
 
     return 0;
