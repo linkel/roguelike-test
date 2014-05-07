@@ -402,13 +402,13 @@ int main()
     }
     //Stops the curses window.
     endwin();
-
     return 0;
 }
 
 
 void GetCommand(int nMapX, int nMapY)
 {
+    //Check to see if location on map is empty.
     if(nItemArray[nMapY][nMapX] == ITEM_EMPTY)
     {
         mvaddstr(MAP_HEIGHT + 2, 2,"There is nothing here to pick up!");
