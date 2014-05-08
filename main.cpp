@@ -439,6 +439,7 @@ void GetCommand(int nMapX, int nMapY)
 
 void DropCommand(int nMapX, int nMapY)
 {
+    //Ask player what they want to drop.
     mvaddstr(MAP_HEIGHT + 2, 2, "What do you want to drop?");
     int input;
     int slot;
@@ -466,10 +467,14 @@ void DropCommand(int nMapX, int nMapY)
     else
     {
         clear();
+        //Set nItemType to what is in the slot at that time
         int nItemType = nInventory[slot];
+        //Put what is in the slot onto the map
         nItemArray[nMapY][nMapX] = nInventory[slot];
+        //Remove what is on the slot
         nInventory[slot] = ITEM_EMPTY;
         mvaddstr(MAP_HEIGHT + 2, 2, "Dropped ");
+        //nItemType is used to grab the name
         addstr(sItemIndex[nItemType].pName);
         addstr(".");
         return;
