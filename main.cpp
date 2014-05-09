@@ -506,6 +506,7 @@ void UseItem(void)
             mvaddstr(MAP_HEIGHT + 2, 2, "You don't have an item in that slot! ");
             getch();
             break;
+            //so the above will prevent use if inventory slot is empty.
         default:
             int nItemType = nInventory[slot];
             mvaddstr(MAP_HEIGHT + 2, 2, "You fiddle with your ");
