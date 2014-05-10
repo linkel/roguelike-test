@@ -191,6 +191,7 @@ void GetCommand(int nMapX, int nMapY);
 void DropCommand(int nMapX, int nMapY);
 void UseItem(void);
 
+//This might be better integrated into the door command?
 bool IsDoor(int nMapX, int nMapY)
 {
     int fTile = nMapArray[nMapY][nMapX];
